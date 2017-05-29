@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="assignment07.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="fibonacci.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -29,5 +26,17 @@
     <ClInclude Include="fibonacci.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="listIterator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="node.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="makefile" />
   </ItemGroup>
 </Project>
