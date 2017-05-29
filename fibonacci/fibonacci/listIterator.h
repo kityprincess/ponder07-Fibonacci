@@ -17,7 +17,7 @@ private:
 
 public:
    ListIterator() : m_ptr(NULL) { }
-   ListIterator(const Node<T> * & in_ptr)
+   ListIterator(Node<T> * in_ptr)
       : m_ptr(in_ptr)
    {
    }
@@ -83,7 +83,7 @@ inline ListIterator<T> ListIterator<T>::operator--(int i)
       throw "ERROR: Start of Iterator";
 
    ListIterator<T> before = *this;
-   --this:
+   --this;
    return before;
 }
 

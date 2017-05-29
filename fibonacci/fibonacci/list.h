@@ -93,10 +93,10 @@ public:
    T & back() const;
 
    // returns the start of a forward iterator
-   ListIterator<T> begin() const { return ListIterator<T>(); }
+   ListIterator<T> begin() const;
 
    // returns the end of a forward iterator
-   ListIterator<T> end() const { return ListIterator<T>(); }
+   ListIterator<T> end() const;
 
    // returns the start of an iterator to iterate in reverse
    ListIterator<T> rbegin() const { return ListIterator<T>(); }
@@ -337,6 +337,18 @@ inline T & List<T>::back() const
    {
       throw "ERROR: unable to access data from an empty List";
    }
+}
+
+template<class T>
+inline ListIterator<T> List<T>::begin() const
+{
+   return ListIterator<T>(m_front);
+}
+
+template<class T>
+inline ListIterator<T> List<T>::end() const
+{
+   return ListIterator<T>(m_back);
 }
 
 /*****************************************************************************
