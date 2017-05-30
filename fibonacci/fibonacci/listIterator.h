@@ -31,7 +31,7 @@ public:
    T & operator * () const;
 
 };
-#endif // !LISTITERATOR_H
+
 
 template<class T>
 inline bool ListIterator<T>::operator==(const ListIterator<T>& rhs) const
@@ -92,3 +92,5 @@ inline T & ListIterator<T>::operator*() const
 {
    return m_ptr->data;
 }
+
+#endif // !LISTITERATOR_H
