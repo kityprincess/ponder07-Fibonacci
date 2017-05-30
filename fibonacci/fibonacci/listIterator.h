@@ -28,7 +28,7 @@ public:
    ListIterator<T> operator ++ (int i);
    ListIterator<T> & operator -- ();
    ListIterator<T> operator -- (int i);
-   T operator * () const;
+   T & operator * () const;
 
 };
 #endif // !LISTITERATOR_H
@@ -88,7 +88,7 @@ inline ListIterator<T> ListIterator<T>::operator--(int i)
 }
 
 template<class T>
-inline T ListIterator<T>::operator*() const
+inline T & ListIterator<T>::operator*() const
 {
    return m_ptr->data;
 }

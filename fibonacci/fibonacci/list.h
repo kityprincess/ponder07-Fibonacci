@@ -24,9 +24,12 @@ class List
 {
 public:
    // default and non-default constructor
-   List<T>(int in_capacity = 0) :
-      m_capacity(in_capacity), m_size(0), m_front(0), m_back(0)
+   List<T>() :
+      m_node(NULL), m_size(0)
    {
+      m_node = new Node<T>(T());
+      m_node->next = m_node;
+      m_node->prev = m_node;
    }
 
    // copy constructor
@@ -53,24 +56,6 @@ public:
       return m_size;
    }
 
-   // gets the capacity (# of items it can hold) of the List
-   // now, we don't really need capacity since we're using a linked list,
-   // so if we never really keep this up-to-date until somebody asks for it
-   int capacity()
-   {
-      // if we haven't set the capacity yet, but we have some data
-      // then we initialize our capacity to 1
-      if (m_capacity == 0 && m_size > 0)
-         m_capacity = 1;
-
-      // if our capacity is ever less than our size, we just double it
-      // until it exceeds our size
-      while (m_capacity < m_size)
-         m_capacity *= 2;
-
-      return m_capacity;
-   }
-
    // empties the List
    void clear();
 
@@ -81,10 +66,10 @@ public:
    void push_front(T in_value);
 
    // inserts an item after the iterator
-   void insert(ListIterator<T> in_iterator, const T & item) { }
+   void insert(ListIterator<T> in_iterator, const T & item);
 
    // removes an item from the list
-   void remove(ListIterator<T> in_iterator) { }
+   void remove(ListIterator<T> & in_iterator);
 
    // returns the item at the front of the List
    T & front() const;
@@ -99,10 +84,10 @@ public:
    ListIterator<T> end() const;
 
    // returns the start of an iterator to iterate in reverse
-   ListIterator<T> rbegin() const { return ListIterator<T>(); }
+   ListIterator<T> rbegin() const;
 
    // returns the end of an iterator to iterate in reverse
-   ListIterator<T> rend() const { return ListIterator<T>(); }
+   ListIterator<T> rend() const;
 
 private:
    // we can check this at any time to ensure our structure appears
@@ -110,11 +95,9 @@ private:
    bool isValid() const;
 
    // front and back nodes
-   Node<T> * m_front;
-   Node<T> * m_back;
+   Node<T> * m_node;
 
    // keeping track of the size and capacity
-   int m_capacity;
    int m_size;
 };
 
@@ -124,22 +107,24 @@ private:
 *****************************************************************************/
 template<class T>
 inline List<T>::List(const List<T>& source)
-   : m_capacity(0), m_size(0), m_front(NULL), m_back(NULL)
+   : m_size(0), m_node(NULL)
 {
-   Node<T> * ptr = source.m_front;
-
-   // And now we just push the data onto our list one at a time
-   while (ptr)
+   try
    {
-      push_back(ptr->data);
-      ptr = ptr->next;
+      m_node = new Node<T>(T());
+      m_node->next = m_node;
+      m_node->prev = m_node;
+   }
+   catch (std::bad_alloc ex)
+   {
+      throw "ERROR: unable to allocate a new node for a list";
    }
 
-   // We expect our size to be the same as the source's at this point
-   assert(m_size == source.m_size);
-
-   // Make sure we're valid
-   assert(isValid());
+   for (ListIterator<T> it = source.begin();
+      it != source.end(); ++it)
+   {
+      push_back(*it);
+   }
 }
 
 /*****************************************************************************
@@ -157,24 +142,11 @@ inline List<T>& List<T>::operator=(const List<T>& rhs)
    clear();
 
    // Now we copy the old onto the new
+   m_size = 0;
 
-   // The easiest way to do this is simply to walk the rhs list
-   // and push them onto our own -- this may not be the most
-   // efficient, but we're not dealing with a lot of data right now
-   m_size = 0; // we start at zero since we're currently empty
-   Node<T> * ptr = rhs.m_front;
-
-   while (ptr)
-   {
-      push_back(ptr->data);
-      ptr = ptr->next;
-   }
-
-   // we expect our size to be the same as the rhs size at this point
-   assert(m_size == rhs.m_size);
-
-   // lastly, we make sure we're valid
-   assert(isValid());
+   for (ListIterator<T> it = rhs.begin();
+      it != rhs.end(); ++it)
+      push_back(*it);
 
    return *this;
 }
@@ -190,18 +162,12 @@ inline void List<T>::clear()
    if (empty())
       return;
 
-   // otherwise, we just walk through the list deleting nodes
-   // we expect that we have a non-null front at this point
-   while (NULL != m_front)
-   {
-      Node<T> * oldFront = m_front;
-      m_front = m_front->next;
-      delete oldFront;
-   }
-
-   // we set m_back to NULL and set our size to 0
-   m_back = NULL;
-   m_size = 0;
+   // we could do this without using remove, of course, but we might as well
+   // reuse the code we've written. Note that remove effectively moves the
+   // iterator forward
+   for (ListIterator<T> it = begin();
+      it != end();)
+      remove(it);
 
    // and make sure we're valid after all this
    assert(isValid());
@@ -214,45 +180,7 @@ inline void List<T>::clear()
 template<class T>
 inline void List<T>::push_back(T in_value)
 {
-   Node<T> * newNode = NULL;
-
-   try
-   {
-      if (!empty())
-      {
-         // If we are not empty, then we assume that m_back is a valid
-         // pointer
-         assert(NULL != m_back);
-
-         newNode = new Node<T>(in_value, m_back, NULL);
-         m_back->next = newNode;
-         m_back = newNode;
-      }
-      else
-      {
-         // If we _are_ empty, then we assume that m_back and m_front 
-         // are both null pointers
-         assert(NULL == m_back && NULL == m_front);
-
-         newNode = new Node<T>(in_value);
-         m_front = m_back = newNode;
-      }
-   }
-   catch (std::bad_alloc ex)
-   {
-      throw "ERROR: Unable to allocate a new buffer for List";
-   }
-
-   // At this point, but m_front and m_back should be non-null
-   assert(NULL != m_back && NULL != m_front);
-
-   m_size++;
-
-   // Our size should be positive
-   assert(m_size > 0);
-
-   // as a final sanity check, we check our structure is valid
-   assert(isValid());
+   insert(end(), in_value);
 }
 
 /*****************************************************************************
@@ -262,43 +190,66 @@ inline void List<T>::push_back(T in_value)
 template<class T>
 inline void List<T>::push_front(T in_value)
 {
-   Node<T> * newNode = NULL;
+   insert(begin(), in_value);
+}
 
+/*****************************************************************************
+* List :: INSERT
+* Inserts an item before the location in the list
+*****************************************************************************/
+template<class T>
+inline void List<T>::insert(ListIterator<T> in_iterator, const T & item)
+{
+   Node<T> * newNode;
+   
    try
    {
-      if (!empty())
-      {
-         // we expect that m_front is not null
-         assert(NULL != m_front);
-
-         newNode = new Node<T>(in_value, NULL, m_front);
-         m_front->prev = newNode;
-         m_front = newNode;
-      }
-      else
-      {
-         // we expect that both m_front and m_back are null
-         assert(NULL == m_front && NULL == m_back);
-
-         newNode = new Node<T>(in_value);
-         m_front = m_back = newNode;
-      }
+      newNode = new Node<T>(item);
    }
    catch (std::bad_alloc ex)
    {
-      throw "ERROR: Unable to allocate a new buffer for List";
+      throw "ERROR: unable to allocate a new node for a list";
    }
 
-   // at this point neither m_front nor m_back should be null
-   assert(NULL != m_front && NULL != m_back);
+   Node<T> * ptr = in_iterator.m_ptr;
+   
+   if (NULL == ptr)
+      throw "ERROR: invalid pointer";
+
+   newNode->prev = ptr->prev;
+   newNode->next = ptr;
+   ptr->prev->next = newNode;
+   ptr->prev = newNode;
 
    m_size++;
+}
 
-   // size should be greater than 0
-   assert(m_size > 0);
+/*****************************************************************************
+* List :: REMOVE
+* Removes from the list the item pointed to by the iterator
+*****************************************************************************/
+template<class T>
+inline void List<T>::remove(ListIterator<T> & in_iterator)
+{
+   if (in_iterator == end())
+      throw "ERROR: unable to remove from an invalid location in a list";
 
-   // and we do once last sanity check that we're valid
-   assert(isValid());
+   Node<T> * ptr = in_iterator.m_ptr;
+
+   if (NULL == ptr)
+      return;
+
+   if (NULL != ptr->next)
+      ptr->next->prev = ptr->prev;
+
+   if (NULL != ptr->prev)
+      ptr->prev->next = ptr->next;
+
+   in_iterator.m_ptr = ptr->next;
+
+   delete ptr;
+
+   m_size--;
 }
 
 /*****************************************************************************
@@ -310,9 +261,7 @@ inline T & List<T>::front() const
 {
    if (!empty())
    {
-      // we expect that m_front is not null
-      assert(NULL != m_front);
-      return m_front->data;
+      return *(begin());
    }
    else
    {
@@ -329,9 +278,7 @@ inline T & List<T>::back() const
 {
    if (!empty())
    {
-      // we expect that m_back is not null
-      assert(NULL != m_back);
-      return m_back->data;
+      return *(--end());
    }
    else
    {
@@ -339,16 +286,36 @@ inline T & List<T>::back() const
    }
 }
 
+/*****************************************************************************
+* List :: BEGIN
+* Returns an iterator pointing at the first node in the list
+*****************************************************************************/
 template<class T>
 inline ListIterator<T> List<T>::begin() const
 {
-   return ListIterator<T>(m_front);
+   return ListIterator<T>(m_node->next);
 }
 
+/*****************************************************************************
+* List :: END
+* Returns an iterator pointing at the end of the list
+*****************************************************************************/
 template<class T>
 inline ListIterator<T> List<T>::end() const
 {
-   return ListIterator<T>(m_back);
+   return ListIterator<T>(m_node);
+}
+
+template<class T>
+inline ListIterator<T> List<T>::rbegin() const
+{
+   return --end();
+}
+
+template<class T>
+inline ListIterator<T> List<T>::rend() const
+{
+   return --begin();
 }
 
 /*****************************************************************************
@@ -360,17 +327,7 @@ inline bool List<T>::isValid() const
 {
    bool valid = true;
 
-   // size should alway be positive or 0
-   valid = valid && (m_size >= 0);
-
-   // if size is 0, then our pointers should be null
-   valid = valid && (m_size != 0 || (m_front == NULL && m_back == NULL));
-
-   // if size is not zero, then our pointers should be non-null
-   valid = valid && (m_size == 0 || (m_front != NULL && m_back != NULL));
-
-   // lastly, if our size is 1, then m_front should == m_back
-   valid = valid && (m_size != 1 || (m_front == m_back));
+   
 
    return valid;
 }
