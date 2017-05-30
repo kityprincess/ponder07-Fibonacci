@@ -29,7 +29,7 @@ public:
    void clear();
    void push_back() throw (const char *);
    void push_front() throw (const char *);
-   ListIterator remove(list <T> ::iterator & it) throw (const char *);
+   ListIterator <T> remove(ListIterator <T> & it) throw (const char *);
    T front() const throw (const char *);
    T back() const throw (const char *);
 
@@ -119,7 +119,7 @@ private:
    * Pushes an item onto the front of the list.
    *****************************************************************************/
    template<class T>
-   void List<T> ::push_front(T in_value) throw (const char *)
+   void List<T> :: push_front(T in_value) throw (const char *)
    {
       Node * newNode = NULL;
 
@@ -165,10 +165,11 @@ private:
    * Removes an item from the list.
    *****************************************************************************/
    template<Class T>
-   List<T> ::iterator List<T> ::erase(List <T> ::iterator & it) throw (const char *)
+   ListIterator <T> List <T> :: remove(ListIterator <T> & it) throw (const char *)
    {
       if (headNode == NULL)
          return;
+
       if (it == begin())
       {
          Node * newNode = headNode->next;
@@ -177,18 +178,12 @@ private:
       }
       else if (it != begin() || it != end())
       {
-         Node * newNode = prev->next;
-         prev->next = newNode->next;
+         Node * newNode = **it**prev->**it**next;
+         **it**->**it**next = newNode->**it**next;
          delete newNode;
       }
       else (it == end())
-      {
-         catch (std::bad_alloc ex)
-         {
-            throw "ERROR: unable to remove from an invalid location in a list";
-         }
-      }
-
+         throw "ERROR: unable to remove from an invalid location in a list";
    }
 
    /*****************************************************************************
@@ -196,7 +191,7 @@ private:
    * Returns the item at the front of the list
    *****************************************************************************/
    template<class T>
-   T List<T> ::front() const throw (const char *)
+   T List<T> :: front() const throw (const char *)
    {
       if (!empty())
       {
