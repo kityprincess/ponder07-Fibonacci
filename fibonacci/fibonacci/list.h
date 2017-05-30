@@ -56,6 +56,12 @@ public:
    // returns the back item of a list
    T back() const throw (const char *);
 
+   ListIterator <T> insert(ListIterator <T> & location, T & item) throw (const char *);
+   ListIterator <T> begin() throw (const char *);
+   ListIterator <T> end();
+   ListIterator <T> rbegin();
+   ListIterator <T> rend();
+
 private:
    // member variables
    Node <T> * headNode;
@@ -305,6 +311,73 @@ T List<T> ::back() const throw (const char *)
    {
       throw "ERROR: unable to access data from an empty list";
    }
+}
+
+
+/***************************************************************************
+* List :: INSERT
+* Inserts an item into the middle of the list
+***************************************************************************/
+template <class T>
+ListIterator <T> List<T> ::insert(ListIterator <T> & location, T & item) throw (const char *)
+{
+   try
+   {
+      // front part
+      Node * newNode = new Node <T>(item);
+      Node * pPrev = location.p->pPrev;
+      pPrev->pNext = newNode;
+      newNode->pPrev = pPrev;
+
+      location.p->pPrev = newNode;
+      newNode->pNext = location.p;
+
+      numElements++;
+   }
+
+   catch (std::bad_alloc ex)
+   {
+      throw "ERROR: unable to allocate a new node for a list";
+   }
+   return ListIterator <T> newNode;
+}
+
+/***************************************************************************
+* List :: BEGIN
+* Starts at the beginning of the list
+***************************************************************************/
+template <class T>
+ListIterator <T> List<T> ::begin() throw (const char *)
+{
+   return ListIterator <T>(headNode->pNext);
+}
+
+/***************************************************************************
+* List :: END
+* Starts at the end of the list
+***************************************************************************/
+template <class T>
+ListIterator <T> List <T> ::end()
+{
+   return ListIterator <T>(backNode);
+}
+
+/****************************************************************************
+* List :: RBEGIN
+* Returns an iterator to the last element in the list
+****************************************************************************/
+ListIterator <T> List <T> ::rbegin()
+{
+   return ListIterator <T>(backNode->pPrev);
+}
+
+/****************************************************************************
+* List :: REND
+* Returns an iterator to past the front element in the list
+****************************************************************************/
+ListIterator <T> List <T> ::rend()
+{
+   return ListIterator <T>(headNode);
 }
 
 #endif // LIST_H
