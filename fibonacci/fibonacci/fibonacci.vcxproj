@@ -116,8 +116,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="fibonacci.h" />
-    <ClInclude Include="largeIntegers.h" />
-    <ClInclude Include="list-k.h" />
     <ClInclude Include="list.h" />
     <ClInclude Include="node.h" />
   </ItemGroup>
