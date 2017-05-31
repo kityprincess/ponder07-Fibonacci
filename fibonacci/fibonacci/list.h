@@ -49,7 +49,7 @@ public:
    void push_front(const T & item) throw (const char *);
 
    // removes an item from a list using the iterator
-   ListIterator <T> remove(ListIterator <T> & it) throw (const char *);
+   void remove(ListIterator <T> & it) throw (const char *);
 
    // returns the front item of a list
    T & front() const throw (const char *);
@@ -259,7 +259,7 @@ void List<T> ::push_front(const T & in_value) throw (const char *)
 * Removes an item from the list.
 *****************************************************************************/
 template <class T>
-ListIterator <T> List <T> ::remove(ListIterator <T> & it) throw (const char *)
+void List <T> ::remove(ListIterator <T> & it) throw (const char *)
 {
    if (headNode == NULL)
       return;
@@ -272,11 +272,16 @@ ListIterator <T> List <T> ::remove(ListIterator <T> & it) throw (const char *)
    }
    else if (it != begin() || it != end())
    {
+
+      //TODO: Need to be able to access the node that is currently pointed at
+      // by the iterator
+      /*
       Node * newNode = **it**prev->**it**next;
       **it**->**it**next = newNode->**it**next;
       delete newNode;
-   }
-   else (it == end())
+      */
+      ;   }
+   else
       throw "ERROR: unable to remove from an invalid location in a list";
 }
 
@@ -329,8 +334,8 @@ ListIterator <T> List<T> ::insert(ListIterator <T> & location, T & item) throw (
    try
    {
       // front part
-      Node * newNode = new Node <T>(item);
-      Node * pPrev = location.p->pPrev;
+      Node<T> * newNode = new Node <T>(item);
+      Node<T> * pPrev = location.p->pPrev;
       pPrev->pNext = newNode;
       newNode->pPrev = pPrev;
 

@@ -10,6 +10,7 @@ class ListIterator
 
 {
 
+
 public:
 
    // default constructor
@@ -49,7 +50,10 @@ public:
    }
 
 
-
+   bool operator == (const ListIterator & rhs) const
+   {
+      return rhs.p == this->p;
+   }
    // not equals operator
 
    bool operator != (const ListIterator & rhs) const
