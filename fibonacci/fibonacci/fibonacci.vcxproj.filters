@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="assignment07.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="fibonacci.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -42,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="largeIntegers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="listIterator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

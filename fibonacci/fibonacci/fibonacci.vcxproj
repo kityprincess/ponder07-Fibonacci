@@ -110,7 +110,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="assignment07.cpp" />
     <ClCompile Include="fibonacci.cpp" />
     <ClCompile Include="week07.cpp" />
   </ItemGroup>
@@ -118,6 +117,7 @@
     <ClInclude Include="fibonacci.h" />
     <ClInclude Include="largeIntegers.h" />
     <ClInclude Include="list.h" />
+    <ClInclude Include="listIterator.h" />
     <ClInclude Include="node.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
