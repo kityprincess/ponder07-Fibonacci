@@ -331,10 +331,12 @@ T & List<T> ::back() const throw (const char *)
 template <class T>
 ListIterator <T> List<T> ::insert(ListIterator <T> & location, T & item) throw (const char *)
 {
+   Node<T> * newNode;
+   
    try
    {
       // front part
-      Node<T> * newNode = new Node <T>(item);
+      newNode = new Node <T>(item);
       Node<T> * pPrev = location.p->pPrev;
       pPrev->pNext = newNode;
       newNode->pPrev = pPrev;
@@ -349,7 +351,8 @@ ListIterator <T> List<T> ::insert(ListIterator <T> & location, T & item) throw (
    {
       throw "ERROR: unable to allocate a new node for a list";
    }
-   return ListIterator <T> newNode;
+   
+   return ListIterator <T>(newNode);
 }
 
 /***************************************************************************

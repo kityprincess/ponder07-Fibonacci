@@ -3,6 +3,8 @@
 
 #include "node.h"
 // class inside my node class for listIterator
+template <class T>
+class List;
 
 template <class T>
 
@@ -10,6 +12,7 @@ class ListIterator
 
 {
 
+   friend class List<T>;
 
 public:
 
