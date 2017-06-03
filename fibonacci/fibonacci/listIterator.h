@@ -57,7 +57,7 @@ public:
    // prefix increment
    ListIterator <T> & operator ++ ()
    {
-      p++;
+      p = p->pNext;
       return *this;
    }
 
@@ -65,14 +65,14 @@ public:
    ListIterator <T> operator++(int postfix)
    {
       ListIterator tmp(*this);
-      p++;
+      p = p->pNext;
       return tmp;
    }
 
    // prefix decrement
    ListIterator <T> & operator -- ()
    {
-      p--;
+      p = p->pPrev;
       return *this;
    }
 
@@ -80,7 +80,7 @@ public:
    ListIterator <T> operator -- (int postfix)
    {
       ListIterator tmp(*this);
-      p--;
+      p = p->pPrev;
       return tmp;
    }
 

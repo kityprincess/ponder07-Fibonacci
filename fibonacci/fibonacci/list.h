@@ -40,7 +40,7 @@ public:
 
    // additional methods
    bool empty() const { return numElements == 0; }
-   int size()         { return numElements;      }
+   int size() const      { return numElements;      }
 
    // clears the contents of list
    void clear();
@@ -123,7 +123,7 @@ List <T> :: List(List <T> & source) throw (const char *)
    
    // copy over the data
    for (ListIterator <T> it = source.begin();
-        it != source.end();it++)
+        it != source.end();++it)
    {
       push_back(*it);
    }

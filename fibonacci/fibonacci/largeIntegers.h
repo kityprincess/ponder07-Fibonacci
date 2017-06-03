@@ -13,6 +13,7 @@
 #include "list.h"
 #include <cassert>
 #include <iostream>
+#include <iomanip>
 #include <ostream>
 
 #define MAXNODES 7
@@ -25,7 +26,10 @@ class LargeIntegers
 {
 public:
    // default & non-defualt constructors
-   LargeIntegers(int numNodes = 0) : numNodes(numNodes), large(NULL) {  }
+   LargeIntegers(int number = 0)
+   {
+      large.push_front(number);
+   }
 
    // copy constructor
    LargeIntegers(const LargeIntegers & source);
@@ -33,26 +37,24 @@ public:
    // assignment operator
    LargeIntegers & operator = (const LargeIntegers & rhs);
 
-   // displays information on the screen
-   friend std::ostream & operator << (std::ostream & out, const LargeIntegers & rhs);
+   // displays a LargeInteger
+   void display(std::ostream & out) const;
 
-   // add-onto operator
-   friend LargeIntegers & operator += (const LargeIntegers & lhs, const LargeIntegers & rhs);
+   // add onto function
+   void addOnto(const LargeIntegers & term);
+
+private:
 
    //variables
-   List <int> * large;
-   int numNodes;
+   List <int> large;
 };
 
 /************************************************
 * LARGEINTEGERS :: COPY CONSTRUCTOR
 ***********************************************/
 LargeIntegers::LargeIntegers(const LargeIntegers & source)
-   : numNodes(0), large(NULL)
 {
-   this->large = source.large;
-
-   numNodes = source.numNodes;
+   large = source.large;
 }
 
 /************************************************
@@ -61,12 +63,7 @@ LargeIntegers::LargeIntegers(const LargeIntegers & source)
 ***********************************************/
 std::ostream & operator << (std::ostream & out, const LargeIntegers & rhs)
 {
-   // insert , at thousands - need to iterate through 
-   for (ListIterator <int> it = rhs.large.begin();
-      it != rhs.large.end(); it++)
-      out << *it << ",";
-
-   out << *it << endl;
+   rhs.display(out);
 
    return out;
 }
@@ -75,26 +72,10 @@ std::ostream & operator << (std::ostream & out, const LargeIntegers & rhs)
 * LARGEINTEGERS :: Add-Onto Operator
 * Adds to whole numbers & puts results in this.
 ***********************************************/
-LargeIntegers & operator += (const LargeIntegers & lhs, const LargeIntegers & rhs)
+LargeIntegers & operator += (LargeIntegers & lhs, const LargeIntegers & rhs)
 {
-   //greater than modulus 1000 and less than whatever is 21
-   for (ListIterator <int> it = lhs.large.begin(), ListIterator <int> it2 = rhs.large.begin();
-      it != lhs.end() || it2 != rhs.end(); it++, it2++)
-   {
-      *it += *it2;
-      if *it <= 999999999999999999999
-      {
-         *it / 1000 = *this;
-         if *this > 0
-         {
-            *it % 1000 = Node<int> * newNode;
-         }
-         else
-            *this = Node<int> * newNode;
-      } 
-   }
-   else
-      throw "ERROR: Number too large";
+   lhs.addOnto(rhs);
+   return lhs;
 }
 
 /************************************************
@@ -103,11 +84,82 @@ LargeIntegers & operator += (const LargeIntegers & lhs, const LargeIntegers & rh
 ***********************************************/
 LargeIntegers & LargeIntegers :: operator = (const LargeIntegers & rhs)
 {
-   this->large = source.large;
-
-   numNodes = source.numNodes;
-
+   large = rhs.large;
    return *this;
+}
+
+/************************************************
+* LARGEINTEGERS :: DISPLAY
+* Writes this large integer to an output stream
+***********************************************/
+inline void LargeIntegers::display(std::ostream & out) const
+{
+   ListIterator<int> it = large.begin();
+
+   while (it != large.end())
+   {
+      if (it == large.begin())
+         out << *it;
+      else
+         out << std::setw(3) << std::setfill('0') << *it;
+      
+      ++it;
+
+      if (it != large.end())
+         out << ",";
+   }
+}
+
+/************************************************
+* LARGEINTEGERS :: Add Onto
+* Adds one large integer onto this one
+***********************************************/
+inline void LargeIntegers::addOnto(const LargeIntegers & term)
+{
+   // we need a carry in case the number exceeds the max value that can fit in a node
+   int carry = 0;
+
+   ListIterator<int> myIt = large.rbegin();
+   ListIterator<int> otherIt = term.large.rbegin();
+ 
+   while (myIt != large.rend() || otherIt != term.large.rend())
+   {
+      if (otherIt == term.large.rend())
+      {
+         while (myIt != large.rend())
+         {
+            int sum = *myIt + carry;
+            *myIt = sum % 1000;
+            carry = sum / 1000;
+            --myIt;
+         }
+         break;
+      }
+      else if (myIt == term.large.rend())
+      {
+         while (otherIt != term.large.rend())
+         {
+            int sum = *otherIt + carry;
+            large.push_front(sum % 1000);
+            carry = sum / 1000;
+            --otherIt;
+         }
+         break;
+      }
+      else
+      {
+         int sum = *myIt + *otherIt + carry;
+         *myIt = sum % 1000;
+         carry = sum / 1000;
+         --myIt;
+         --otherIt;
+      }
+   }
+
+   if (carry)
+      large.push_front(carry);
+
+   return;
 }
 
 #endif // LARGEINTEGERS_H
