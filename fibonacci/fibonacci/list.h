@@ -27,7 +27,7 @@ class List
 {
 public:
    // default constructor
-   List <T> () : m_node(NULL), numElements(0) { }
+   List <T>()  throw (const char*);
 
    // copy constructor
    List <T> (List<T> & source) throw (const char *);
@@ -83,6 +83,24 @@ private:
    Node <T> * m_node;
    int numElements;
 };
+/*******************************************
+* LIST :: DEFAULT CONSTRUCTOR
+*******************************************/
+template <class T>
+List <T> ::List() throw (const char*)
+   : numElements(0), m_node(NULL)
+{
+   try
+   {
+      m_node = new Node <T>(T());
+      m_node->pNext = m_node;
+      m_node->pPrev = m_node;
+   }
+   catch (std::bad_alloc)
+   {
+      throw "ERROR: unable to allocate a new node for a list";
+   }
+}
 
 /*******************************************
  * LIST :: COPY CONSTRUCTOR
