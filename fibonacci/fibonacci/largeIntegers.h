@@ -33,9 +33,10 @@ public:
    // assignment operator
    LargeIntegers & operator = (const LargeIntegers & rhs);
 
-
+   // displays information on the screen
    friend std::ostream & operator << (std::ostream & out, const LargeIntegers & rhs);
 
+   // add-onto operator
    friend LargeIntegers & operator += (const LargeIntegers & lhs, const LargeIntegers & rhs);
 
    //variables
@@ -78,13 +79,22 @@ LargeIntegers & operator += (const LargeIntegers & lhs, const LargeIntegers & rh
 {
    //greater than modulus 1000 and less than whatever is 21
    for (ListIterator <int> it = lhs.large.begin(), ListIterator <int> it2 = rhs.large.begin();
-      it != lhs.end() || it2 != rhs.end(); it++, 1t2++)
+      it != lhs.end() || it2 != rhs.end(); it++, it2++)
    {
       *it += *it2;
-      //if ()
+      if *it <= 999999999999999999999
+      {
+         *it / 1000 = *this;
+         if *this > 0
+         {
+            *it % 1000 = Node<int> * newNode;
+         }
+         else
+            *this = Node<int> * newNode;
+      } 
    }
-
-
+   else
+      throw "ERROR: Number too large";
 }
 
 /************************************************
