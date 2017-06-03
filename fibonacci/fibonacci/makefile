@@ -8,10 +8,14 @@
 #     This program uses nodes to create doubly-linked circular
 #		lists to deal with Fibonacci numbers. 
 # Time:
-#     Matthew Burr - hours
-#	  Shayla Nelson - hours
-#	  Bryan Lopez - hours
+#     Matthew Burr - 5 hours
+#	  Shayla Nelson - 2 hours
+#	  Bryan Lopez - 5 hours
 #	  Kimberly Stowe - 9 hours 
+#
+# Hardest Part:
+#	  The add-onto operator for the Fibonacci numbers was the
+#	      hardest part of this program.
 ###############################################################
 
 ##############################################################

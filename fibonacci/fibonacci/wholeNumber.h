@@ -1,6 +1,6 @@
 /***********************************************************************
 * Header:
-*    LargeIntegers
+*    WholeNumber
 * Summary:
 *    This class allows for large integers to be used via nodes.
 * Author:
@@ -19,29 +19,29 @@
 #define MAXNODES 7
 
 /************************************************
-* LARGEINTEGERS
+* WHOLENUMBER
 * A class encapsulating large integers.
 ***********************************************/
-class LargeIntegers
+class WholeNumber
 {
 public:
    // default & non-defualt constructors
-   LargeIntegers(int number = 0)
+   WholeNumber(int number = 0)
    {
       large.push_front(number);
    }
 
    // copy constructor
-   LargeIntegers(const LargeIntegers & source);
+   WholeNumber(const WholeNumber & source);
 
    // assignment operator
-   LargeIntegers & operator = (const LargeIntegers & rhs);
+   WholeNumber & operator = (const WholeNumber & rhs);
 
    // displays a LargeInteger
    void display(std::ostream & out) const;
 
    // add onto function
-   void addOnto(const LargeIntegers & term);
+   void addOnto(const WholeNumber & term);
 
 private:
 
@@ -52,7 +52,7 @@ private:
 /************************************************
 * LARGEINTEGERS :: COPY CONSTRUCTOR
 ***********************************************/
-LargeIntegers::LargeIntegers(const LargeIntegers & source)
+WholeNumber::WholeNumber(const WholeNumber & source)
 {
    large = source.large;
 }
@@ -61,7 +61,7 @@ LargeIntegers::LargeIntegers(const LargeIntegers & source)
 * LARGEINTEGERS :: Insertion Operator
 * Displays the list on the screen
 ***********************************************/
-std::ostream & operator << (std::ostream & out, const LargeIntegers & rhs)
+std::ostream & operator << (std::ostream & out, const WholeNumber & rhs)
 {
    rhs.display(out);
 
@@ -72,7 +72,7 @@ std::ostream & operator << (std::ostream & out, const LargeIntegers & rhs)
 * LARGEINTEGERS :: Add-Onto Operator
 * Adds to whole numbers & puts results in this.
 ***********************************************/
-LargeIntegers & operator += (LargeIntegers & lhs, const LargeIntegers & rhs)
+WholeNumber & operator += (WholeNumber & lhs, const WholeNumber & rhs)
 {
    lhs.addOnto(rhs);
    return lhs;
@@ -82,7 +82,7 @@ LargeIntegers & operator += (LargeIntegers & lhs, const LargeIntegers & rhs)
 * LARGEINTEGERS :: Assignment Operator
 * Copies one list to another
 ***********************************************/
-LargeIntegers & LargeIntegers :: operator = (const LargeIntegers & rhs)
+WholeNumber & WholeNumber :: operator = (const WholeNumber & rhs)
 {
    large = rhs.large;
    return *this;
@@ -92,7 +92,7 @@ LargeIntegers & LargeIntegers :: operator = (const LargeIntegers & rhs)
 * LARGEINTEGERS :: DISPLAY
 * Writes this large integer to an output stream
 ***********************************************/
-inline void LargeIntegers::display(std::ostream & out) const
+inline void WholeNumber::display(std::ostream & out) const
 {
    ListIterator<int> it = large.begin();
 
@@ -114,7 +114,7 @@ inline void LargeIntegers::display(std::ostream & out) const
 * LARGEINTEGERS :: Add Onto
 * Adds one large integer onto this one
 ***********************************************/
-inline void LargeIntegers::addOnto(const LargeIntegers & term)
+inline void WholeNumber::addOnto(const WholeNumber & term)
 {
    // we need a carry in case the number exceeds the max value that can fit in a node
    int carry = 0;

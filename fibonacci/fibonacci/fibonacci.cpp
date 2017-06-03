@@ -5,12 +5,12 @@
  *    This will contain the implementation for fibonacci() as well as any
  *    other function or class implementations you may need
  * Author
- *    <your names here>
+ *    Matthew Burr, Shayla Nelson, Bryan Lopez, Kimberly Stowe
  **********************************************************************/
 
 #include <iostream>
 #include "fibonacci.h"   // for fibonacci() prototype
-#include "largeIntegers.h"
+#include "wholeNumber.h"
 using namespace std;
 
 
@@ -28,9 +28,9 @@ void fibonacci()
 
    // Start with the initial number (1) and the initial predecessor
    {
-      LargeIntegers a(0);
-      LargeIntegers b(0);
-      LargeIntegers fib(1);
+      WholeNumber a(0);
+      WholeNumber b(0);
+      WholeNumber fib(1);
 
       while (number > 0)
       {
@@ -49,9 +49,9 @@ void fibonacci()
 
    // your code to display the <number>th Fibonacci number
    {
-      LargeIntegers a(0);
-      LargeIntegers b(0);
-      LargeIntegers fib(1);
+      WholeNumber a(0);
+      WholeNumber b(0);
+      WholeNumber fib(1);
       while (number > 1)
       {
          a = b;

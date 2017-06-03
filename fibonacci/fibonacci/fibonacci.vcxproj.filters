@@ -38,10 +38,10 @@
     <ClInclude Include="node.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="largeIntegers.h">
+    <ClInclude Include="listIterator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="listIterator.h">
+    <ClInclude Include="wholeNumber.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
